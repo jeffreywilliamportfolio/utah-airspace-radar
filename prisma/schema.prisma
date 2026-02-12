@@ -7,16 +7,34 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum EventType {
+  INGESTION
+  ERROR
+  SYSTEM
+}
+
+enum IngestionStatus {
+  RUNNING
+  SUCCEEDED
+  FAILED
+}
+
 model Story {
-  id          String     @id @default(cuid())
-  title       String
-  summary     String
-  sourceUrl   String     @unique
-  imageUrl    String?
-  publishedAt DateTime
-  category    String
-  createdAt   DateTime   @default(now())
-  citations   Citation[]
+  id             String        @id @default(cuid())
+  title          String
+  summary        String
+  sourceUrl      String        @unique
+  imageUrl       String?
+  publishedAt    DateTime
+  category       String
+  createdAt      DateTime      @default(now())
+  ingestionRunId String?
+  citations      Citation[]
+  ingestionRun   IngestionRun? @relation(fields: [ingestionRunId], references: [id], onDelete: SetNull)
+
+  @@index([publishedAt])
+  @@index([createdAt])
+  @@index([ingestionRunId])
 }
 
 model Citation {
@@ -25,28 +43,43 @@ model Citation {
   label   String
   url     String
   story   Story  @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+  @@index([storyId])
+  @@unique([storyId, url])
 }
 
 model EventLogItem {
-  id        String   @id @default(cuid())
-  type      String
-  message   String
-  metadata  Json
-  createdAt DateTime @default(now())
+  id             String        @id @default(cuid())
+  type           EventType
+  message        String
+  metadata       Json
+  createdAt      DateTime      @default(now())
+  ingestionRunId String?
+  ingestionRun   IngestionRun? @relation(fields: [ingestionRunId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([type, createdAt])
+  @@index([ingestionRunId])
 }
 
 model NotamItem {
-  id            String   @id @default(cuid())
+  id            String        @id @default(cuid())
   title         String
   body          String
   sourceUrl     String
   effectiveFrom DateTime?
   effectiveTo   DateTime?
-  createdAt     DateTime @default(now())
+  createdAt     DateTime      @default(now())
+  ingestionRunId String?
+  ingestionRun  IngestionRun? @relation(fields: [ingestionRunId], references: [id], onDelete: SetNull)
+
+  @@index([sourceUrl])
+  @@index([createdAt])
+  @@index([ingestionRunId])
 }
 
 model AircraftSnapshot {
-  id        String   @id @default(cuid())
+  id        String        @id @default(cuid())
   callsign  String?
   latitude  Float
   longitude Float
@@ -54,23 +87,56 @@ model AircraftSnapshot {
   heading   Float?
   seenAt    DateTime
   source    String
-  createdAt DateTime @default(now())
+  createdAt DateTime      @default(now())
+  ingestionRunId String?
+  ingestionRun  IngestionRun? @relation(fields: [ingestionRunId], references: [id], onDelete: SetNull)
+
+  @@index([seenAt])
+  @@index([latitude, longitude])
+  @@index([source, seenAt])
+  @@index([ingestionRunId])
 }
 
 model DigestSnapshot {
-  id         String   @id @default(cuid())
-  generatedAt DateTime @default(now())
-  pdfPath    String?
-  storyCount Int
-  notamCount Int
-  eventCount Int
+  id             String        @id @default(cuid())
+  generatedAt    DateTime      @default(now())
+  pdfPath        String?
+  storyCount     Int
+  notamCount     Int
+  eventCount     Int
+  ingestionRunId String?
+  ingestionRun   IngestionRun? @relation(fields: [ingestionRunId], references: [id], onDelete: SetNull)
+
+  @@index([generatedAt])
+  @@index([ingestionRunId])
+}
+
+model IngestionRun {
+  id            String          @id @default(cuid())
+  status        IngestionStatus
+  startedAt     DateTime        @default(now())
+  finishedAt    DateTime?
+  error         String?
+  metadata      Json?
+  storyCount    Int             @default(0)
+  notamCount    Int             @default(0)
+  aircraftCount Int             @default(0)
+  stories       Story[]
+  eventLogItems EventLogItem[]
+  notamItems    NotamItem[]
+  aircraftItems AircraftSnapshot[]
+  digests       DigestSnapshot[]
+
+  @@index([status, startedAt])
+  @@index([startedAt])
 }
 
 model Incident {
   id        String   @id @default(cuid())
-  date      DateTime @db.Date
-  time      DateTime @db.Time(0)
+  occurredAt DateTime
   incident  String
   location  String
   createdAt DateTime @default(now())
+
+  @@index([occurredAt])
 }
