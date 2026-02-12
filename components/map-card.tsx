@@ -30,7 +30,7 @@ export function MapCard({ aircraft }: { aircraft: AircraftPoint[] }) {
           <li key={item.id} className="flex items-center justify-between">
             <span>{item.callsign || "Unknown"}</span>
             <span>
-              {item.altitude ? `${Math.round(item.altitude)} m` : "No altitude"}
+              {item.altitude != null ? `${Math.round(item.altitude)} m` : "No altitude"}
             </span>
           </li>
         ))}

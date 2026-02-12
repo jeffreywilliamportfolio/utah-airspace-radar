@@ -6,7 +6,7 @@ export const runtime = "nodejs";
 
 function isAuthorized(request: Request): boolean {
   if (!env.CRON_SECRET) {
-    return true;
+    return false;
   }
 
   const authHeader = request.headers.get("authorization");
@@ -18,6 +18,13 @@ function isAuthorized(request: Request): boolean {
 }
 
 export async function GET(request: Request) {
+  if (!env.CRON_SECRET) {
+    return NextResponse.json(
+      { error: "CRON_SECRET is not configured" },
+      { status: 503 }
+    );
+  }
+
   if (!isAuthorized(request)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
