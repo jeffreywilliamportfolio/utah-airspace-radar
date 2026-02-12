@@ -35,7 +35,28 @@ export function AudioCard() {
     setIsResolving(true);
     setFeedback("");
 
-    const popup = window.open("", "_blank", "noopener,noreferrer");
+    const popup = window.open("about:blank", "_blank");
+    if (popup) {
+      popup.opener = null;
+      if (!popup.closed) {
+        const popupDocument = popup.document;
+        popupDocument.title = "Resolving LiveATC feed...";
+        popupDocument.body.style.margin = "0";
+        popupDocument.body.style.minHeight = "100vh";
+        popupDocument.body.style.display = "grid";
+        popupDocument.body.style.placeItems = "center";
+        popupDocument.body.style.fontFamily = "system-ui, -apple-system, sans-serif";
+        popupDocument.body.style.background = "#020617";
+        popupDocument.body.style.color = "#e2e8f0";
+
+        const message = popupDocument.createElement("p");
+        message.textContent = `Resolving LiveATC feed for ${trimmedQuery}...`;
+        message.style.margin = "0";
+        message.style.padding = "16px";
+        message.style.fontSize = "14px";
+        popupDocument.body.replaceChildren(message);
+      }
+    }
 
     try {
       const response = await fetch(
@@ -53,10 +74,10 @@ export function AudioCard() {
         throw new Error(payload.error ?? "Unable to resolve LiveATC feed.");
       }
 
-      if (popup) {
-        popup.location.href = payload.url;
+      if (popup && !popup.closed) {
+        popup.location.replace(payload.url);
       } else {
-        window.open(payload.url, "_blank", "noopener,noreferrer");
+        window.location.href = payload.url;
       }
 
       if (payload.airportCode) {
@@ -65,7 +86,7 @@ export function AudioCard() {
         setFeedback("Opened LiveATC search results.");
       }
     } catch {
-      if (popup) {
+      if (popup && !popup.closed) {
         popup.close();
       }
       setFeedback("Could not resolve that location. Try ZIP, city/state, or airport code.");
