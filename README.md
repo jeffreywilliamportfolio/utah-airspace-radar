@@ -34,7 +34,8 @@ Provide a near-realtime operational awareness surface for Utah airspace-related 
   - Each NOTAM card includes the originating source URL.
 
 - **Live aircraft context (KSLC area)**
-  - OpenSky state vectors provide map/contextual traffic around KSLC.
+  - Flight Radar8 (RapidAPI) is used first when `RAPID_API_KEY` is configured.
+  - OpenSky state vectors act as a fallback source if Flight Radar8 is unavailable.
   - Aircraft snapshots are persisted for dashboard display.
 
 - **SLC public comms access**
@@ -74,7 +75,7 @@ Provide a near-realtime operational awareness surface for Utah airspace-related 
 - **Backend/API:** Next.js Route Handlers (Node runtime on Vercel)
 - **Agent Layer:** OpenAI Agents SDK (`@openai/agents`)
 - **Primary Retrieval Tool:** Brave Search API
-- **Aviation Context:** OpenSky API
+- **Aviation Context:** Flight Radar8 (RapidAPI) + OpenSky fallback
 - **Persistence:** Prisma + PostgreSQL
 - **Document Output:** PDFKit
 - **Scheduling:** Vercel Cron
@@ -114,6 +115,8 @@ Provide a near-realtime operational awareness surface for Utah airspace-related 
 - `OPENAI_API_KEY`
 - `OPENAI_MODEL` (default: `gpt-5-mini`)
 - `BRAVE_API_KEY`
+- `RAPID_API_KEY` (or `RAPIDAPI_KEY`), optional but recommended for Flight Radar8
+- `FLIGHT_RADAR8_HOST` (default: `flight-radar8.p.rapidapi.com`)
 - `DATABASE_URL`
 - `DATABASE_URL_LOCAL` (recommended for local setup)
 - `DATABASE_URL_NEON` (optional, for Neon cutover)
@@ -138,6 +141,7 @@ Provide a near-realtime operational awareness surface for Utah airspace-related 
 - `lib/agents/airspace-agent.ts` — OpenAI Agents summarizer
 - `lib/notams.ts` — Brave-based NOTAM signal fetch
 - `lib/map/opensky.ts` — KSLC aircraft query adapter
+- `lib/map/flight-radar8.ts` — Flight Radar8 aircraft query adapter
 - `app/api/export/pdf/route.ts` — PDF snapshot generation
 - `prisma/schema.prisma` — relational data model
 
