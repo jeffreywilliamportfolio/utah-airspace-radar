@@ -9,9 +9,9 @@ const primaryLinks = [
 ];
 
 const utilityLinks = [
-  { label: "Settings", href: "/settings" },
-  { label: "Export PDF", href: "/api/export/pdf" }
-];
+  { label: "Settings", href: "/settings", type: "route" },
+  { label: "Export PDF", href: "/api/export/pdf", type: "download" }
+] as const;
 
 export function DashboardSidebar() {
   return (
@@ -43,12 +43,21 @@ export function DashboardSidebar() {
           <ul className="space-y-1">
             {utilityLinks.map((link) => (
               <li key={link.label}>
-                <Link
-                  href={link.href}
-                  className="block rounded-md px-3 py-2 text-sm text-slate-200 transition-colors hover:bg-slate-800/70"
-                >
-                  {link.label}
-                </Link>
+                {link.type === "download" ? (
+                  <a
+                    href={link.href}
+                    className="block rounded-md px-3 py-2 text-sm text-slate-200 transition-colors hover:bg-slate-800/70"
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link
+                    href={link.href}
+                    className="block rounded-md px-3 py-2 text-sm text-slate-200 transition-colors hover:bg-slate-800/70"
+                  >
+                    {link.label}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>

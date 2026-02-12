@@ -36,6 +36,7 @@ export function AudioCard() {
     setFeedback("");
 
     const popup = window.open("about:blank", "_blank");
+    const popupWasBlocked = popup === null;
     if (popup) {
       popup.opener = null;
       if (!popup.closed) {
@@ -76,8 +77,11 @@ export function AudioCard() {
 
       if (popup && !popup.closed) {
         popup.location.replace(payload.url);
-      } else {
+      } else if (popupWasBlocked) {
         window.location.href = payload.url;
+      } else {
+        setFeedback("Feed resolved, but the helper tab was closed before navigation. Try Open again.");
+        return;
       }
 
       if (payload.airportCode) {
