@@ -100,11 +100,13 @@ Provide a near-realtime operational awareness surface for Utah airspace-related 
    - `cp .env.example .env.local`
 2. Install dependencies:
    - `npm install`
-3. Generate Prisma client:
+3. Bootstrap local Postgres role/database:
+   - `bash ./scripts/bootstrap_local_postgres.sh`
+4. Generate Prisma client:
    - `npm run prisma:generate`
-4. Apply schema to your database:
-   - `npm run db:push`
-5. Run locally:
+5. Apply schema + migrations to your database:
+   - `npm run prisma:migrate -- --name init`
+6. Run locally:
    - `npm run dev`
 
 ## Required Environment Variables
@@ -113,9 +115,18 @@ Provide a near-realtime operational awareness surface for Utah airspace-related 
 - `OPENAI_MODEL` (default: `gpt-5-mini`)
 - `BRAVE_API_KEY`
 - `DATABASE_URL`
+- `DATABASE_URL_LOCAL` (recommended for local setup)
+- `DATABASE_URL_NEON` (optional, for Neon cutover)
 - `CRON_SECRET`
 - `INGEST_SECRET`
 - `NEXT_PUBLIC_REFRESH_INTERVAL_MS`
+
+## Local ↔ Neon URL Switching (Optional)
+
+- Set both `DATABASE_URL_LOCAL` and `DATABASE_URL_NEON` in your env file.
+- Switch active URL:
+  - Local: `bash ./scripts/switch_database_url.sh .env.local local`
+  - Neon: `bash ./scripts/switch_database_url.sh .env.local neon`
 
 ## Repository Layout
 

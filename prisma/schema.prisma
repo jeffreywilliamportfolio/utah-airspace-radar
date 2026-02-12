@@ -65,3 +65,12 @@ model DigestSnapshot {
   notamCount Int
   eventCount Int
 }
+
+model Incident {
+  id        String   @id @default(cuid())
+  date      DateTime @db.Date
+  time      DateTime @db.Time(0)
+  incident  String
+  location  String
+  createdAt DateTime @default(now())
+}

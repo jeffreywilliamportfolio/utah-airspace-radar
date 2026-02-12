@@ -12,7 +12,10 @@
     "ssl:generate": "bash ./scripts/create-local-ssl.sh",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "db:push": "prisma db push"
+    "db:push": "prisma db push",
+    "db:bootstrap": "bash ./scripts/bootstrap_local_postgres.sh",
+    "db:switch:local": "bash ./scripts/switch_database_url.sh .env.local local",
+    "db:switch:neon": "bash ./scripts/switch_database_url.sh .env.local neon"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
