@@ -45,3 +45,4 @@
 
 ## Agent-Specific Instructions
 - `web-design-guidelines`: Review UI code for Web Interface Guidelines compliance. Use when asked to "review my UI", "check accessibility", "audit design", "review UX", or "check my site against best practices". (file: `/Users/jeffreyshorthill/.codex/skills/web-design-guidelines/SKILL.md`)
+- `react-grid-gsap-ui-enhancer`: Enhance React dashboard UIs that use react-grid-layout with GSAP animations, including responsive breakpoint behavior, drag/resize interaction polish, and motion performance/accessibility guardrails. Use when asked for React Grid + animation upgrades, GSAP integration, smoother drag/drop transitions, motion refactors, or UI micro-interaction improvements. (file: `/Users/jeffreyshorthill/.codex/skills/react-grid-gsap-ui-enhancer/SKILL.md`)
