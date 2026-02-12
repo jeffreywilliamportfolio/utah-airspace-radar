@@ -63,7 +63,12 @@ export async function getDashboardData(): Promise<DashboardData> {
         heading: item.heading,
         seenAt: item.seenAt.toISOString()
       })),
-      sources: ["Brave Search API", "OpenSky", "OpenAI Agents"]
+      sources: [
+        "Brave Search API",
+        "Flight Radar8 (RapidAPI)",
+        "OpenSky (fallback)",
+        "OpenAI Agents"
+      ]
     };
   } catch {
     return getFallbackDashboardData();

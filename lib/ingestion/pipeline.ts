@@ -6,6 +6,10 @@ import {
 } from "@/lib/agents/airspace-agent";
 import { fetchBraveNotams } from "@/lib/notams";
 import { fetchSlcAircraft } from "@/lib/map/opensky";
+import {
+  fetchSlcAircraftFromFlightRadar8,
+  isFlightRadar8Configured
+} from "@/lib/map/flight-radar8";
 
 const STORY_QUERIES = [
   "Utah airspace incident",
@@ -48,7 +52,13 @@ export async function runIngestionPipeline() {
     const summaryByUrl = new Map(summaries.map((item) => [item.sourceUrl, item]));
 
     const notams = await fetchBraveNotams();
-    const aircraft = await fetchSlcAircraft();
+    const flightRadar8Configured = isFlightRadar8Configured();
+    const flightRadar8Aircraft = flightRadar8Configured
+      ? await fetchSlcAircraftFromFlightRadar8()
+      : [];
+    const usingFlightRadar8 = flightRadar8Aircraft.length > 0;
+    const aircraft = usingFlightRadar8 ? flightRadar8Aircraft : await fetchSlcAircraft();
+    const aircraftSource = usingFlightRadar8 ? "FlightRadar8" : "OpenSky";
 
     for (const candidate of candidates) {
       const summary = summaryByUrl.get(candidate.sourceUrl);
@@ -96,7 +106,7 @@ export async function runIngestionPipeline() {
           altitude: item.altitude,
           heading: item.heading,
           seenAt: new Date(item.seenAt),
-          source: "OpenSky",
+          source: aircraftSource,
           ingestionRunId: ingestionRun.id
         }))
       });
@@ -105,11 +115,14 @@ export async function runIngestionPipeline() {
     await prisma.eventLogItem.create({
       data: {
         type: "INGESTION",
-        message: `Processed ${candidates.length} stories, ${notams.length} NOTAM candidates, ${aircraft.length} aircraft points.`,
+        message: `Processed ${candidates.length} stories, ${notams.length} NOTAM candidates, ${aircraft.length} aircraft points via ${aircraftSource}.`,
         metadata: {
           candidateCount: candidates.length,
           notamCount: notams.length,
-          aircraftCount: aircraft.length
+          aircraftCount: aircraft.length,
+          aircraftSource,
+          flightRadar8Configured,
+          flightRadar8Count: flightRadar8Aircraft.length
         },
         ingestionRunId: ingestionRun.id
       }
