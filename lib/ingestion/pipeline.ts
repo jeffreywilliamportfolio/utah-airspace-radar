@@ -64,8 +64,8 @@ export async function runIngestionPipeline() {
     });
   }
 
+  await prisma.notamItem.deleteMany();
   if (notams.length > 0) {
-    await prisma.notamItem.deleteMany();
     await prisma.notamItem.createMany({
       data: notams.map((item) => ({
         title: item.title,
@@ -75,8 +75,8 @@ export async function runIngestionPipeline() {
     });
   }
 
+  await prisma.aircraftSnapshot.deleteMany();
   if (aircraft.length > 0) {
-    await prisma.aircraftSnapshot.deleteMany();
     await prisma.aircraftSnapshot.createMany({
       data: aircraft.map((item) => ({
         callsign: item.callsign,
