@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Story {
+  id          String     @id @default(cuid())
+  title       String
+  summary     String
+  sourceUrl   String     @unique
+  imageUrl    String?
+  publishedAt DateTime
+  category    String
+  createdAt   DateTime   @default(now())
+  citations   Citation[]
+}
+
+model Citation {
+  id      String @id @default(cuid())
+  storyId String
+  label   String
+  url     String
+  story   Story  @relation(fields: [storyId], references: [id], onDelete: Cascade)
+}
+
+model EventLogItem {
+  id        String   @id @default(cuid())
+  type      String
+  message   String
+  metadata  Json
+  createdAt DateTime @default(now())
+}
+
+model NotamItem {
+  id            String   @id @default(cuid())
+  title         String
+  body          String
+  sourceUrl     String
+  effectiveFrom DateTime?
+  effectiveTo   DateTime?
+  createdAt     DateTime @default(now())
+}
+
+model AircraftSnapshot {
+  id        String   @id @default(cuid())
+  callsign  String?
+  latitude  Float
+  longitude Float
+  altitude  Float?
+  heading   Float?
+  seenAt    DateTime
+  source    String
+  createdAt DateTime @default(now())
+}
+
+model DigestSnapshot {
+  id         String   @id @default(cuid())
+  generatedAt DateTime @default(now())
+  pdfPath    String?
+  storyCount Int
+  notamCount Int
+  eventCount Int
+}
