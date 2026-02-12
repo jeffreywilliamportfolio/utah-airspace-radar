@@ -40,6 +40,7 @@ APP_DB_NAME="${APP_DB_NAME:-utah_airspace}"
 APP_DB_USER="${APP_DB_USER:-utah_airspace}"
 APP_DB_PASSWORD="${APP_DB_PASSWORD:-utah_airspace_local_dev}"
 ADMIN_DB="${ADMIN_DB:-postgres}"
+SQL_ESCAPED_PASSWORD="${APP_DB_PASSWORD//\'/\'\'}"
 
 if [[ ! "$APP_DB_NAME" =~ ^[a-zA-Z0-9_]+$ ]]; then
   echo "Error: APP_DB_NAME must be alphanumeric/underscore only." >&2
@@ -62,9 +63,9 @@ DO
 \$\$
 BEGIN
   IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = '${APP_DB_USER}') THEN
-    CREATE ROLE ${APP_DB_USER} LOGIN PASSWORD '${APP_DB_PASSWORD}' CREATEDB;
+    CREATE ROLE ${APP_DB_USER} LOGIN PASSWORD '${SQL_ESCAPED_PASSWORD}' CREATEDB;
   ELSE
-    ALTER ROLE ${APP_DB_USER} CREATEDB;
+    ALTER ROLE ${APP_DB_USER} LOGIN PASSWORD '${SQL_ESCAPED_PASSWORD}' CREATEDB;
   END IF;
 END
 \$\$;
