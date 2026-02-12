@@ -40,7 +40,6 @@ APP_DB_NAME="${APP_DB_NAME:-utah_airspace}"
 APP_DB_USER="${APP_DB_USER:-utah_airspace}"
 APP_DB_PASSWORD="${APP_DB_PASSWORD:-utah_airspace_local_dev}"
 ADMIN_DB="${ADMIN_DB:-postgres}"
-SQL_ESCAPED_PASSWORD="${APP_DB_PASSWORD//\'/\'\'}"
 
 if [[ ! "$APP_DB_NAME" =~ ^[a-zA-Z0-9_]+$ ]]; then
   echo "Error: APP_DB_NAME must be alphanumeric/underscore only." >&2
@@ -58,14 +57,17 @@ if ! "$PG_ISREADY_BIN" -h "$PGHOST" -p "$PGPORT" >/dev/null 2>&1; then
   exit 1
 fi
 
-"$PSQL_BIN" "postgresql://${PGHOST}:${PGPORT}/${ADMIN_DB}" -v ON_ERROR_STOP=1 <<SQL
+"$PSQL_BIN" "postgresql://${PGHOST}:${PGPORT}/${ADMIN_DB}" \
+  -v ON_ERROR_STOP=1 \
+  -v app_db_user="${APP_DB_USER}" \
+  -v app_db_password="${APP_DB_PASSWORD}" <<SQL
 DO
 \$\$
 BEGIN
-  IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = '${APP_DB_USER}') THEN
-    CREATE ROLE ${APP_DB_USER} LOGIN PASSWORD '${SQL_ESCAPED_PASSWORD}' CREATEDB;
+  IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = :'app_db_user') THEN
+    EXECUTE format('CREATE ROLE %I LOGIN PASSWORD %L CREATEDB', :'app_db_user', :'app_db_password');
   ELSE
-    ALTER ROLE ${APP_DB_USER} LOGIN PASSWORD '${SQL_ESCAPED_PASSWORD}' CREATEDB;
+    EXECUTE format('ALTER ROLE %I LOGIN PASSWORD %L CREATEDB', :'app_db_user', :'app_db_password');
   END IF;
 END
 \$\$;
