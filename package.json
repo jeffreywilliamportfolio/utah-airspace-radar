@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
+    "@lottiefiles/dotlottie-react": "^0.17.15",
     "@openai/agents": "^0.1.0",
     "@prisma/client": "^6.3.1",
     "clsx": "^2.1.1",

@@ -8,6 +8,7 @@ import { DashboardHeader } from "@/components/dashboard-header";
 import { DesktopGrid } from "@/components/desktop-grid";
 import { MobileStack } from "@/components/mobile-stack";
 import { SplashScreen } from "@/components/splash-screen";
+import { LottieBackground } from "@/components/lottie-background";
 
 type ViewMode = "desktop" | "mobile";
 type SplashPhase = "visible" | "transitioning" | "hidden";
@@ -81,9 +82,10 @@ export function AppShell({ initialData }: { initialData: DashboardData }) {
   }, [refreshMs]);
 
   return (
-    <div ref={scopeRef}>
+    <div ref={scopeRef} className="relative min-h-screen">
+      <LottieBackground />
       {splashPhase !== "hidden" ? <SplashScreen /> : null}
-      <main className="page-shell mx-auto min-h-screen max-w-[1920px] p-4 md:p-6 2xl:max-w-[2280px]">
+      <main className="page-shell relative z-10 mx-auto min-h-screen max-w-[1920px] p-4 md:p-6 2xl:max-w-[2280px]">
         <DashboardHeader generatedAt={data.generatedAt} />
         {viewMode === "desktop" ? (
           <DesktopGrid data={data} />
