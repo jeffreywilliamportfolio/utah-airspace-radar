@@ -2,12 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-bg-start: 15 23 42;
+  --color-bg-end: 2 6 23;
+  --color-surface: 10 16 30;
+  --color-panel: 15 23 42;
+  --color-accent: 56 189 248;
+  --color-accent-2: 125 211 252;
+  --color-soft: 148 163 184;
+  --color-text: 226 232 240;
+  --radius-card: 14px;
+}
+
 body {
-  background: radial-gradient(circle at top, #14213d 0%, #050a14 65%);
-  color: #e2e8f0;
+  background: radial-gradient(
+    130% 120% at 50% 0%,
+    rgb(var(--color-bg-start)) 0%,
+    rgb(var(--color-bg-end)) 65%
+  );
+  color: rgb(var(--color-text));
   min-height: 100vh;
+  font-family: var(--font-body), "Inter", ui-sans-serif, system-ui, sans-serif;
+  text-rendering: optimizeLegibility;
 }
 
 a {
   color: inherit;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading), "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.02em;
 }
