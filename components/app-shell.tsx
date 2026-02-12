@@ -83,7 +83,7 @@ export function AppShell({ initialData }: { initialData: DashboardData }) {
   return (
     <div ref={scopeRef}>
       {splashPhase !== "hidden" ? <SplashScreen /> : null}
-      <main className="page-shell mx-auto min-h-screen max-w-[1280px] p-4 md:p-6">
+      <main className="page-shell mx-auto min-h-screen max-w-[1920px] p-4 md:p-6 2xl:max-w-[2280px]">
         <DashboardHeader generatedAt={data.generatedAt} />
         {viewMode === "desktop" ? (
           <DesktopGrid data={data} />

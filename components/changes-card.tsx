@@ -22,16 +22,25 @@ export function ChangesCard({
       </div>
       <div className="mt-3">
         <p className="mb-2 text-xs text-soft">Newest sources</p>
-        <ul className="space-y-1 text-xs">
-          {newest.map((story) => (
-            <li
-              key={story.id}
-              className="truncate rounded border border-slate-700/60 bg-slate-900/70 px-2 py-1"
-            >
-              {story.title}
-            </li>
-          ))}
-        </ul>
+        {newest.length === 0 ? (
+          <div className="rounded-md border border-dashed border-slate-700/70 bg-slate-900/50 px-3 py-2 text-xs text-soft">
+            <span aria-hidden className="mr-1">
+              ◌
+            </span>
+            No stories in last sweep.
+          </div>
+        ) : (
+          <ul className="space-y-1 text-xs">
+            {newest.map((story) => (
+              <li
+                key={story.id}
+                className="truncate rounded border border-slate-700/60 bg-slate-900/70 px-2 py-1"
+              >
+                {story.title}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </Card>
   );

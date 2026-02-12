@@ -10,7 +10,7 @@ export function MapCard({ aircraft }: { aircraft: AircraftPoint[] }) {
         <h2 className="text-lg font-semibold">Live Aircraft Around KSLC</h2>
         <span className="text-xs text-soft">{aircraft.length} tracked</span>
       </div>
-      <div className="rounded-lg border border-slate-700/60 bg-slate-950/70 p-2">
+      <div className="relative rounded-lg border border-slate-700/60 bg-slate-950/70 p-2">
         <svg viewBox="0 0 300 180" className="h-40 w-full">
           <rect width="300" height="180" fill="#020617" />
           <circle cx="150" cy="90" r="5" fill="#93c5fd" />
@@ -24,17 +24,33 @@ export function MapCard({ aircraft }: { aircraft: AircraftPoint[] }) {
             );
           })}
         </svg>
+        {aircraft.length === 0 ? (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-4">
+            <div className="rounded-md border border-dashed border-slate-700/80 bg-slate-950/80 px-3 py-2 text-center">
+              <span aria-hidden className="block text-base text-soft">
+                ◌
+              </span>
+              <p className="text-xs text-soft">No live aircraft tracked yet.</p>
+            </div>
+          </div>
+        ) : null}
       </div>
-      <ul className="mt-3 space-y-1 overflow-auto text-xs text-slate-300">
-        {aircraft.slice(0, 6).map((item) => (
-          <li key={item.id} className="flex items-center justify-between">
-            <span>{item.callsign || "Unknown"}</span>
-            <span>
-              {item.altitude != null ? `${Math.round(item.altitude)} m` : "No altitude"}
-            </span>
-          </li>
-        ))}
-      </ul>
+      {aircraft.length === 0 ? (
+        <div className="mt-3 rounded-md border border-dashed border-slate-700/70 bg-slate-900/50 px-3 py-2 text-xs text-soft">
+          Waiting for aircraft telemetry in this area.
+        </div>
+      ) : (
+        <ul className="mt-3 space-y-1 overflow-auto text-xs text-slate-300">
+          {aircraft.slice(0, 6).map((item) => (
+            <li key={item.id} className="flex items-center justify-between">
+              <span>{item.callsign || "Unknown"}</span>
+              <span>
+                {item.altitude != null ? `${Math.round(item.altitude)} m` : "No altitude"}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
     </Card>
   );
 }

@@ -13,13 +13,13 @@ export function DashboardHeader({ generatedAt }: { generatedAt: string }) {
         <div className="flex flex-wrap items-center gap-2">
           <a
             href="/settings"
-            className="rounded-md border border-slate-600 px-3 py-2 text-xs font-medium text-slate-200"
+            className="rounded-md border border-slate-600 px-3 py-2 text-xs font-medium text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
           >
             Settings
           </a>
           <a
             href="/api/export/pdf"
-            className="rounded-md bg-accent px-3 py-2 text-xs font-semibold text-slate-900"
+            className="rounded-md bg-accent px-3 py-2 text-xs font-semibold text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
           >
             Save Snapshot PDF
           </a>

@@ -29,7 +29,7 @@ export function AudioCard() {
               href={stream.url}
               target="_blank"
               rel="noreferrer"
-              className="block rounded-lg border border-slate-700/70 bg-slate-900/70 p-2 text-sm text-accent hover:border-slate-500"
+              className="block rounded-lg border border-slate-700/70 bg-slate-900/70 p-2 text-sm text-accent hover:border-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
             >
               {stream.label}
             </a>

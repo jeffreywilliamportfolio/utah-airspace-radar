@@ -15,6 +15,24 @@ import "react-resizable/css/styles.css";
 const ResponsiveGrid = WidthProvider(Responsive);
 
 const layouts: Layouts = {
+  xxl: [
+    { i: "stories", x: 0, y: 0, w: 8, h: 9 },
+    { i: "notams", x: 8, y: 0, w: 8, h: 5 },
+    { i: "map", x: 8, y: 5, w: 8, h: 5 },
+    { i: "events", x: 0, y: 9, w: 5, h: 7 },
+    { i: "audio", x: 5, y: 9, w: 3, h: 4 },
+    { i: "anomaly", x: 8, y: 10, w: 4, h: 3 },
+    { i: "changes", x: 12, y: 10, w: 4, h: 4 }
+  ],
+  xl: [
+    { i: "stories", x: 0, y: 0, w: 7, h: 9 },
+    { i: "notams", x: 7, y: 0, w: 7, h: 5 },
+    { i: "map", x: 7, y: 5, w: 7, h: 5 },
+    { i: "events", x: 0, y: 9, w: 4, h: 7 },
+    { i: "audio", x: 4, y: 9, w: 3, h: 4 },
+    { i: "anomaly", x: 7, y: 10, w: 4, h: 3 },
+    { i: "changes", x: 11, y: 10, w: 3, h: 4 }
+  ],
   lg: [
     { i: "stories", x: 0, y: 0, w: 6, h: 8 },
     { i: "notams", x: 6, y: 0, w: 6, h: 6 },
@@ -40,10 +58,10 @@ export function DesktopGrid({ data }: { data: DashboardData }) {
     <ResponsiveGrid
       className="layout"
       layouts={layouts}
-      breakpoints={{ lg: 1200, md: 960, sm: 0 }}
-      cols={{ lg: 12, md: 10, sm: 1 }}
-      rowHeight={48}
-      margin={[12, 12]}
+      breakpoints={{ xxl: 1900, xl: 1450, lg: 1200, md: 960, sm: 0 }}
+      cols={{ xxl: 16, xl: 14, lg: 12, md: 10, sm: 1 }}
+      rowHeight={52}
+      margin={[14, 14]}
       isResizable
       isDraggable
     >
